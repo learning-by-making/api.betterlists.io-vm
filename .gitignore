@@ -1,0 +1,8 @@
+# images log files like ubuntu-xenial-16.04-cloudimg-console.log
+*.log
+
+# vm info
+.vagrant
+
+# Vagrant ENV Plugin (dotenv)
+.env.*
