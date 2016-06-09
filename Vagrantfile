@@ -11,10 +11,9 @@ Vagrant.configure(2) do |config|
   config.env.load('.env.local', '.env')
 
   config.vm.hostname = 'api-betterlist-io'
+  
+  config.vm.box = 'AlbanMontaigu/boot2docker'
 
-  config.vm.box = 'ubuntu/trusty64'
-
-  config.vm.provision :docker
   # https://github.com/leighmcculloch/vagrant-docker-compose
   config.vm.provision :docker_compose,
                       yml: '/vagrant/docker-compose.yml',
