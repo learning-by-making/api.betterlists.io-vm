@@ -32,6 +32,9 @@ Vagrant.configure(2) do |config|
 
   # Run Ansible from the Vagrant VM
   config.vm.provision 'ansible_local' do |ansible|
+    ansible.groups = {
+      'api-betterlists-io' => ['default']
+    }
     ansible.playbook = 'playbook.yml'
   end
 
