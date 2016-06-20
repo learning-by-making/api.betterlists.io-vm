@@ -18,14 +18,14 @@ Vagrant.configure(2) do |config|
   # config.env.enable
   config.env.load('.env.local', '.env')
 
-  config.vm.hostname = 'api-betterlist-io'
+  config.vm.hostname = 'api-betterlists-io'
 
   config.vm.box = 'ubuntu/trusty64'
 
   # http://stackoverflow.com/a/35304194
   config.vm.provision 'shell', inline: $install_ansible
   # Patch for https://github.com/mitchellh/vagrant/issues/6793
-  config.vm.provision "shell" do |s|
+  config.vm.provision 'shell' do |s|
     s.inline = '[[ ! -f $1 ]] || grep -F -q "$2" $1 || sed -i "/__main__/a \\    $2" $1'
     s.args = ['/usr/bin/ansible-galaxy', "if sys.argv == ['/usr/bin/ansible-galaxy', '--help']: sys.argv.insert(1, 'info')"]
   end

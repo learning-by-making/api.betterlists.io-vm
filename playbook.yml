@@ -1,4 +1,5 @@
-- hosts: api-betterlist-io
+---
+- hosts: api-betterlists-io
   user: vagrant
 
   tasks:
