@@ -1,0 +1,11 @@
+- hosts: api-betterlist-io
+  user: vagrant
+
+  tasks:
+    - name: Install Linux packages
+      # http://docs.ansible.com/ansible/apt_module.html
+      # http://docs.ansible.com/ansible/playbooks_loops.html
+      action: apt pkg={{ item }} state=present
+      with_items:
+        # required by pg gem
+        - libpq-dev

@@ -14,6 +14,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.box = 'ubuntu/trusty64'
 
+  # Run Ansible from the Vagrant VM
+  config.vm.provision 'ansible_local' do |ansible|
+    ansible.playbook = 'playbook.yml'
+  end
+
+  # Run containers
   config.vm.provision :docker
   # https://github.com/leighmcculloch/vagrant-docker-compose
   config.vm.provision :docker_compose,
