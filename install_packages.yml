@@ -1,0 +1,19 @@
+---
+#
+# http://docs.ansible.com/ansible/apt_module.html
+# http://docs.ansible.com/ansible/playbooks_loops.html
+# http://docs.ansible.com/ansible/playbooks_intro.html#hosts-and-users
+#
+
+- name: Update apt cache
+  apt: update_cache=yes
+  become: yes
+  become_method: sudo
+
+- name: Install Linux packages
+  action: apt pkg={{ item }} state=present
+  with_items:
+    # required by pg gem
+    - libpq-dev
+  become: yes
+  become_method: sudo
