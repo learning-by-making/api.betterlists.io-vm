@@ -18,9 +18,14 @@ Vagrant.configure(2) do |config|
   # config.env.enable
   config.env.load('.env.local', '.env')
 
-  config.vm.hostname = 'api-betterlists-io'
+  config.vm.hostname = ENV['APP_NAME']
 
   config.vm.box = 'ubuntu/trusty64'
+  # the default user for this box is 'vagrant'
+  # config.ssh.username = ENV['VM_USERNAME']
+
+  # https://www.vagrantup.com/docs/synced-folders/
+  config.vm.synced_folder ENV['SOURCE_HOST_FOLDER'], "/home/#{ENV['VM_USERNAME']}/#{ENV['APP_NAME']}", create: true
 
   # http://stackoverflow.com/a/35304194
   config.vm.provision 'shell', inline: $install_ansible
