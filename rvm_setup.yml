@@ -1,0 +1,32 @@
+---
+#
+# https://rvm.io/rvm/install
+# https://rvm.io/workflow/projects
+# NOTE: rvm isn't loaded as a function
+# https://rvm.io/workflow/scripting
+#
+
+#- name: RVM - test
+#  shell: type rvm | head -1
+#  register: test
+#  # Print the shell task's stdout.
+#- debug: msg={{ test.stdout }}
+#  # Print all contents of the shell task's output.
+#- debug: var=test
+
+- name: RVM - Install required packages
+  shell: rvm requirements
+
+- name: RVM - Install ruby
+  shell: rvm install {{ ruby_version }}
+
+- name: RVM - Set default ruby
+  shell: rvm alias create default {{ ruby_version }}
+
+- name: RVM - update rubygems
+  shell: rvm rubygems current
+
+- name: Set and create gemset
+  shell: rvm {{ ruby_version }} do rvm --create --versions-conf use {{ ruby_version }}@{{ app_name }}
+  args:
+    chdir: /home/vagrant/{{ app_name }}

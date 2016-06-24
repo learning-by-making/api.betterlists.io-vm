@@ -2,5 +2,11 @@
 - hosts: api-betterlists-io
   user: vagrant
 
+  # http://docs.ansible.com/ansible/playbooks_lookups.html
+  vars:
+    ruby_version: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env') }}"
+    app_name: "{{ lookup('ini', 'APP_NAME type=properties file=.env') }}"
+
   tasks:
     - include: install_packages.yml
+    - include: rvm_setup.yml

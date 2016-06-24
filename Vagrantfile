@@ -36,6 +36,15 @@ Vagrant.configure(2) do |config|
   end
 
   # Run Ansible from the Vagrant VM
+  # patch: if 'install rvm' tasks and 'setup rvm' tasks run in the same playbook provisioning block
+  #   'rvm not found' error is raised
+  config.vm.provision 'ansible_local' do |ansible|
+    ansible.groups = {
+      'api-betterlists-io' => ['default']
+    }
+    ansible.playbook = 'rvm_install.yml'
+  end
+  #
   config.vm.provision 'ansible_local' do |ansible|
     ansible.groups = {
       'api-betterlists-io' => ['default']
