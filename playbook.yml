@@ -6,7 +6,9 @@
   vars:
     ruby_version: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env') }}"
     app_name: "{{ lookup('ini', 'APP_NAME type=properties file=.env') }}"
+    vm_username: "{{ lookup('ini', 'VM_USERNAME type=properties file=.env') }}"
 
   tasks:
     - include: install_packages.yml
     - include: rvm_setup.yml
+    - include: ssh_keys.yml

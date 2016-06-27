@@ -27,6 +27,8 @@ Vagrant.configure(2) do |config|
   # https://www.vagrantup.com/docs/synced-folders/
   config.vm.synced_folder ENV['SOURCE_HOST_FOLDER'], "/home/#{ENV['VM_USERNAME']}/#{ENV['APP_NAME']}", create: true
 
+  FileUtils.cp(ENV['SSH_PRIVATE_KEY_PATH'], './templates/id_rsa')
+
   # http://stackoverflow.com/a/35304194
   config.vm.provision 'shell', inline: $install_ansible
   # Patch for https://github.com/mitchellh/vagrant/issues/6793

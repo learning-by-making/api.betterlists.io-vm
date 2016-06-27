@@ -6,3 +6,6 @@
 
 # Vagrant ENV Plugin (dotenv)
 .env.*
+
+# ssh private key
+templates/id_rsa

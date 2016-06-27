@@ -15,5 +15,6 @@
   with_items:
     # required by pg gem
     - libpq-dev
+    - git
   become: yes
   become_method: sudo
