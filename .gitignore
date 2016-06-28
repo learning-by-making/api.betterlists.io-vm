@@ -9,3 +9,6 @@
 
 # ssh private key
 templates/id_rsa
+
+# git config
+templates/.gitconfig

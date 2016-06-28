@@ -12,3 +12,4 @@
     - include: install_packages.yml
     - include: rvm_setup.yml
     - include: ssh_keys.yml
+    - include: bash.yml

@@ -1,0 +1,29 @@
+### custom bash prompt
+
+# http://rvm.io/workflow/prompt
+# color: red
+RVM_PROMPT="\[\e[0;31m\]\$(~/.rvm/bin/rvm-prompt s i v p g)"
+
+# user@host:path
+# color: yellow
+STD_PROMPT="\[\e[0;33m\]\u@\h:\w"
+
+# reset_color
+RESET_COLOR="\[\e[0m\]"
+
+# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+# http://ithaca.arpinum.org/2013/01/02/git-prompt.html
+BEFORE_GIT_INFO="$RVM_PROMPT $STD_PROMPT "
+# https://wiki.archlinux.org/index.php/Color_Bash_Prompt#Prompt_escapes
+AFTER_GIT_INFO="$RESET_COLOR\n\$ "
+# formats output in the style of printf: git info in square brackets
+# color: reset color and use git-prompt settings
+FORMAT="\[\e[0m\][%s]"
+# git-prompt settings
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWSTASHSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=true
+GIT_PS1_SHOWCOLORHINTS=true
+GIT_PS1_DESCRIBE_STYLE="branch"
+GIT_PS1_SHOWUPSTREAM="auto git"
+PROMPT_COMMAND='__git_ps1 "$BEFORE_GIT_INFO" "$AFTER_GIT_INFO" "$FORMAT"'

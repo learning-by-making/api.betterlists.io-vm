@@ -28,6 +28,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ENV['SOURCE_HOST_FOLDER'], "/home/#{ENV['VM_USERNAME']}/#{ENV['APP_NAME']}", create: true
 
   FileUtils.cp(ENV['SSH_PRIVATE_KEY_PATH'], './templates/id_rsa')
+  FileUtils.cp(ENV['GITCONFIG_PATH'], './templates/.gitconfig')
 
   # http://stackoverflow.com/a/35304194
   config.vm.provision 'shell', inline: $install_ansible
