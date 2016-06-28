@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
   # config.env.enable
   config.env.load('.env.local', '.env')
 
-  config.vm.hostname = ENV['APP_NAME']
+  config.vm.hostname = "#{ENV['APP_NAME']}-vm"
 
   config.vm.box = 'ubuntu/trusty64'
   # the default user for this box is 'vagrant'
@@ -27,6 +27,8 @@ Vagrant.configure(2) do |config|
   # https://www.vagrantup.com/docs/synced-folders/
   config.vm.synced_folder ENV['SOURCE_HOST_FOLDER'], "/home/#{ENV['VM_USERNAME']}/#{ENV['APP_NAME']}", create: true
 
+  # ansible_local provisioner executes on the guest vm therefore it can read only host files
+  # that are shared with the guest vm
   FileUtils.cp(ENV['SSH_PRIVATE_KEY_PATH'], './templates/id_rsa')
   FileUtils.cp(ENV['GITCONFIG_PATH'], './templates/.gitconfig')
 

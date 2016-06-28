@@ -29,4 +29,4 @@
 - name: Set and create gemset
   shell: rvm {{ ruby_version }} do rvm --create --versions-conf use {{ ruby_version }}@{{ app_name }}
   args:
-    chdir: /home/vagrant/{{ app_name }}
+    chdir: /home/{{ vm_username }}/{{ app_name }}
