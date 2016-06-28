@@ -4,9 +4,17 @@
 
   # http://docs.ansible.com/ansible/playbooks_lookups.html
   vars:
-    ruby_version: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env') }}"
-    app_name: "{{ lookup('ini', 'APP_NAME type=properties file=.env') }}"
-    vm_username: "{{ lookup('ini', 'VM_USERNAME type=properties file=.env') }}"
+    ruby_version_default: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env') }}"
+    ruby_version_local: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env.local') }}"
+    ruby_version: "{{ ruby_version_local | default(ruby_version_default, true) }}"
+
+    app_name_default: "{{ lookup('ini', 'APP_NAME type=properties file=.env') }}"
+    app_name_local: "{{ lookup('ini', 'APP_NAME type=properties file=.env.local') }}"
+    app_name: "{{ app_name_local | default(app_name_default, true) }}"
+
+    vm_username_default: "{{ lookup('ini', 'VM_USERNAME type=properties file=.env') }}"
+    vm_username_local: "{{ lookup('ini', 'VM_USERNAME type=properties file=.env.local') }}"
+    vm_username: "{{ vm_username_local | default(vm_username_default, true) }}"
 
   tasks:
     - include: install_packages.yml
