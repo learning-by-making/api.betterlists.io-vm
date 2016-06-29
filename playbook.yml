@@ -16,8 +16,13 @@
     vm_username_local: "{{ lookup('ini', 'VM_USERNAME type=properties file=.env.local') }}"
     vm_username: "{{ vm_username_local | default(vm_username_default, true) }}"
 
+    ssh_passphrase_default: "{{ lookup('ini', 'SSH_PASSPHRASE type=properties file=.env') }}"
+    ssh_passphrase_local: "{{ lookup('ini', 'SSH_PASSPHRASE type=properties file=.env.local') }}"
+    ssh_passphrase: "{{ ssh_passphrase_local | default(ssh_passphrase_default, true) }}"
+
   tasks:
     - include: install_packages.yml
     - include: rvm_setup.yml
     - include: ssh_keys.yml
     - include: bash.yml
+    - include: clone_api_repo.yml

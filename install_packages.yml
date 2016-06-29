@@ -16,5 +16,12 @@
     # required by pg gem
     - libpq-dev
     - git
+    # required by pip below
+    - python-pip
+  become: yes
+  become_method: sudo
+
+# required by 'Fetch repo' task
+- pip: name=pexpect
   become: yes
   become_method: sudo

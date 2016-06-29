@@ -1,0 +1,18 @@
+---
+#
+# http://docs.ansible.com/ansible/git_module.html
+# http://docs.ansible.com/ansible/expect_module.html
+#
+
+# I'm not able to use git module because I can't type the ssh passphrase
+#- name: Clone API repo
+#  git: repo=git@github.com:learning-by-making/api.betterlists.io.git dest=/home/{{ vm_username }}/{{ app_name }} key_file=/home/{{ vm_username }}/.ssh/id_rsa
+
+- name: Clone API repo
+  expect:
+    command: git clone git@github.com:learning-by-making/api.betterlists.io.git .
+    responses:
+      "Enter passphrase for key '/home/vagrant/.ssh/id_rsa': ": "{{ ssh_passphrase }}"
+  args:
+    chdir: /home/{{ vm_username }}/{{ app_name }}
+    creates: .git/config
