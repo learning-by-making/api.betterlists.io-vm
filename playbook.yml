@@ -1,5 +1,5 @@
 ---
-- hosts: api-betterlists-io
+- hosts: betterlists-vm
   user: vagrant
 
   # http://docs.ansible.com/ansible/playbooks_lookups.html

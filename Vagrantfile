@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
   # config.env.enable
   config.env.load('.env.local', '.env')
 
-  config.vm.hostname = "#{ENV['APP_NAME']}-vm"
+  config.vm.hostname = 'betterlists-vm'
 
   config.vm.box = 'ubuntu/trusty64'
   # the default user for this box is 'vagrant'
@@ -45,14 +45,14 @@ Vagrant.configure(2) do |config|
   #   'rvm not found' error is raised
   config.vm.provision 'ansible_local' do |ansible|
     ansible.groups = {
-      'api-betterlists-io' => ['default']
+      'betterlists-vm' => ['default']
     }
     ansible.playbook = 'rvm_install.yml'
   end
   #
   config.vm.provision 'ansible_local' do |ansible|
     ansible.groups = {
-      'api-betterlists-io' => ['default']
+      'betterlists-vm' => ['default']
     }
     ansible.playbook = 'playbook.yml'
   end
