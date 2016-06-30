@@ -24,6 +24,9 @@ Vagrant.configure(2) do |config|
   # the default user for this box is 'vagrant'
   # config.ssh.username = ENV['VM_USERNAME']
 
+  # create source host folder if it doesn't exist
+  FileUtils::mkdir_p ENV['SOURCE_HOST_FOLDER']
+
   # https://www.vagrantup.com/docs/synced-folders/
   config.vm.synced_folder ENV['SOURCE_HOST_FOLDER'], "/home/#{ENV['VM_USERNAME']}/#{ENV['APP_NAME']}", create: true
 
