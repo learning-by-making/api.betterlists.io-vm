@@ -3,6 +3,7 @@
   user: vagrant
 
   # http://docs.ansible.com/ansible/playbooks_lookups.html
+  # http://docs.ansible.com/ansible/playbooks_filters.html
   vars:
     ruby_version_default: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env') }}"
     ruby_version_local: "{{ lookup('ini', 'RUBY_VERSION type=properties file=.env.local') }}"
@@ -26,3 +27,4 @@
     - include: ssh_keys.yml
     - include: bash.yml
     - include: clone_api_repo.yml
+    - include: hanami_application_setup.yml
