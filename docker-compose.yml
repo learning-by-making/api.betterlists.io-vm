@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/postgres/
 postgres:
   image: postgres:9.5.3
-#  ports:
-#    - '5432'
+  ports:
+    - '5432:5432'
