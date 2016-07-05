@@ -9,4 +9,4 @@
 - name: load .prompt file from .profile
   lineinfile:
     dest: /home/{{ vm_username }}/.profile
-    line: ". /vagrant/templates/.prompt"
+    line: ". /vagrant/playbooks/templates/.prompt"

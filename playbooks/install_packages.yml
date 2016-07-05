@@ -13,10 +13,13 @@
 - name: Install Linux packages
   action: apt pkg={{ item }} state=present
   with_items:
+    # utilities
+    - htop
     # required by pg gem
     - libpq-dev
+    # required to manage source code
     - git
-    # required by pip below
+    # required by pip (see below)
     - python-pip
   become: yes
   become_method: sudo

@@ -8,7 +8,10 @@
 .env.*
 
 # ssh private key
-templates/id_rsa
+playbooks/templates/id_rsa
 
 # git config
-templates/.gitconfig
+playbooks/templates/.gitconfig
+
+# ansible retry files
+playbooks/*.retry

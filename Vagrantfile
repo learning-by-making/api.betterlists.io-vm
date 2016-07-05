@@ -53,8 +53,8 @@ Vagrant.configure(2) do |config|
 
   # ansible_local provisioner executes on the guest vm therefore it can read only host files
   # that are shared with the guest vm
-  FileUtils.cp(ENV['SSH_PRIVATE_KEY_PATH'], './templates/id_rsa')
-  FileUtils.cp(ENV['GITCONFIG_PATH'], './templates/.gitconfig')
+  FileUtils.cp(ENV['SSH_PRIVATE_KEY_PATH'], './playbooks/templates/id_rsa')
+  FileUtils.cp(ENV['GITCONFIG_PATH'], './playbooks/templates/.gitconfig')
 
   # http://stackoverflow.com/a/35304194
   config.vm.provision 'shell', inline: $install_ansible
@@ -71,21 +71,21 @@ Vagrant.configure(2) do |config|
     ansible.groups = {
       'betterlists-vm' => ['default']
     }
-    ansible.playbook = 'rvm_install.yml'
+    ansible.playbook = 'playbooks/rvm_install.yml'
   end
   #
   config.vm.provision 'ansible_local' do |ansible|
     ansible.groups = {
       'betterlists-vm' => ['default']
     }
-    ansible.playbook = 'playbook.yml'
+    ansible.playbook = 'playbooks/master.yml'
   end
 
   # Run containers
   config.vm.provision :docker
   # https://github.com/leighmcculloch/vagrant-docker-compose
   config.vm.provision :docker_compose,
-                      yml: '/vagrant/docker-compose.yml',
+                      yml: '/vagrant/containers/docker-compose.yml',
                       # don't rebuild if environment variable 'DOCKER_COMPOSE_REBUILD' is not set or
                       # if it is equal to 'false' (environment variables return a string)
                       rebuild: !ENV['DOCKER_COMPOSE_REBUILD'].nil? &&
