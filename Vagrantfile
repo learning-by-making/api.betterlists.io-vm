@@ -20,6 +20,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.hostname = 'betterlists-vm'
 
+  config.vm.provider 'virtualbox' do |v|
+    v.name = 'betterlists-vm'
+    v.memory = ENV['VM_MEMORY']
+  end
+  config.vm.network 'forwarded_port', guest: ENV['WEB_GUEST_PORT'], host: ENV['WEB_HOST_PORT']
+
   config.vm.box = 'ubuntu/trusty64'
   # the default user for this box is 'vagrant'
   # config.ssh.username = ENV['VM_USERNAME']
