@@ -1,6 +1,21 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# install Vagrant plugins automatically
+# http://stackoverflow.com/a/28801317
+# https://github.com/aidanns/vagrant-reload/issues/4#issuecomment-230134083
+required_plugins = %w( vagrant-docker-compose vagrant-env vagrant-vbguest )
+plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
+if not plugins_to_install.empty?
+  puts "Installing plugins: #{plugins_to_install.join(' ')}"
+  if system "vagrant plugin install #{plugins_to_install.join(' ')}"
+    exec "vagrant #{ARGV.join(' ')}"
+  else
+    abort "Installation of one or more plugins has failed. Aborting."
+  end
+end
+
+# http://stackoverflow.com/a/35304194 (see below)
 $install_ansible = <<SCRIPT
 apt-get -y install software-properties-common
 apt-add-repository ppa:ansible/ansible
