@@ -17,6 +17,8 @@
     - htop
     # required by pg gem
     - libpq-dev
+    # required by 'hanami db [COMMAND]'
+    - postgresql-client
     # required to manage source code
     - git
     # required by pip (see below)
