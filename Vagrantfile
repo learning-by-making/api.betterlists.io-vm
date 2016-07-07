@@ -41,7 +41,8 @@ Vagrant.configure(2) do |config|
   end
   config.vm.network 'forwarded_port', guest: ENV['WEB_GUEST_PORT'], host: ENV['WEB_HOST_PORT']
 
-  config.vm.box = 'ubuntu/trusty64'
+  # https://github.com/mitchellh/vagrant/issues/7155#issuecomment-216855120
+  config.vm.box = 'geerlingguy/ubuntu1604'
   # the default user for this box is 'vagrant'
   # config.ssh.username = ENV['VM_USERNAME']
 
