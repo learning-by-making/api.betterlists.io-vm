@@ -65,6 +65,18 @@ Vagrant.configure(2) do |config|
     s.args = ['/usr/bin/ansible-galaxy', "if sys.argv == ['/usr/bin/ansible-galaxy', '--help']: sys.argv.insert(1, 'info')"]
   end
 
+  # Run containers
+  config.vm.provision :docker
+  # https://github.com/leighmcculloch/vagrant-docker-compose
+  config.vm.provision :docker_compose,
+                      compose_version: '1.7.1',
+                      yml: '/vagrant/containers/docker-compose.yml',
+                      # don't rebuild if environment variable 'DOCKER_COMPOSE_REBUILD' is not set or
+                      # if it is equal to 'false' (environment variables return a string)
+                      rebuild: !ENV['DOCKER_COMPOSE_REBUILD'].nil? &&
+                        ENV['DOCKER_COMPOSE_REBUILD'].strip.downcase != 'false',
+                      run: 'always'
+
   # Run Ansible from the Vagrant VM
   # patch: if 'install rvm' tasks and 'setup rvm' tasks run in the same playbook provisioning block
   #   'rvm not found' error is raised
@@ -81,15 +93,4 @@ Vagrant.configure(2) do |config|
     }
     ansible.playbook = 'playbooks/master.yml'
   end
-
-  # Run containers
-  config.vm.provision :docker
-  # https://github.com/leighmcculloch/vagrant-docker-compose
-  config.vm.provision :docker_compose,
-                      yml: '/vagrant/containers/docker-compose.yml',
-                      # don't rebuild if environment variable 'DOCKER_COMPOSE_REBUILD' is not set or
-                      # if it is equal to 'false' (environment variables return a string)
-                      rebuild: !ENV['DOCKER_COMPOSE_REBUILD'].nil? &&
-                        ENV['DOCKER_COMPOSE_REBUILD'].strip.downcase != 'false',
-                      run: 'always'
 end
