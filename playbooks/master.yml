@@ -21,6 +21,14 @@
     ssh_passphrase_local: "{{ lookup('ini', 'SSH_PASSPHRASE type=properties file=../.env.local') }}"
     ssh_passphrase: "{{ ssh_passphrase_local | default(ssh_passphrase_default, true) }}"
 
+    postgres_user_default: "{{ lookup('ini', 'POSTGRES_USER type=properties file=../.env') }}"
+    postgres_user_local: "{{ lookup('ini', 'POSTGRES_USER type=properties file=../.env.local') }}"
+    postgres_user: "{{ postgres_user_local | default(postgres_user_default, true) }}"
+
+    postgres_password_default: "{{ lookup('ini', 'POSTGRES_PASSWORD type=properties file=../.env') }}"
+    postgres_password_local: "{{ lookup('ini', 'POSTGRES_PASSWORD type=properties file=../.env.local') }}"
+    postgres_password: "{{ postgres_password_local | default(postgres_password_default, true) }}"
+
   tasks:
     - include: install_packages.yml
     - include: rvm_setup.yml

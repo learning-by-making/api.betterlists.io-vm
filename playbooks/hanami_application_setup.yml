@@ -52,3 +52,28 @@
   shell: rvm {{ ruby_version }}@{{ app_name }} do bundle install
   args:
     chdir: /home/{{ vm_username }}/{{ app_name }}
+
+- name: Configure db connection
+  lineinfile:
+    dest: /home/{{ vm_username }}/{{ app_name }}/.env.development
+    regexp: '^(.*)_DATABASE_URL='
+    line: '\1_DATABASE_URL="postgres://{{ postgres_user }}:{{ postgres_password }}@127.0.0.1/{{ app_name }}_development"'
+    backrefs: yes
+
+# http://stackoverflow.com/a/16783253
+- name: check db exists
+  shell: export PGPASSWORD='{{ postgres_password }}'; psql -U {{ postgres_user }} -h 127.0.0.1 -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_development
+  ignore_errors: yes
+  register: db_exists
+#- debug: msg={{ db_exists }}
+
+- name: Create db
+  shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db create
+  args:
+    chdir: /home/{{ vm_username }}/{{ app_name }}
+  when: db_exists.rc
+
+- name: Run migrations
+  shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db migrate
+  args:
+    chdir: /home/{{ vm_username }}/{{ app_name }}
