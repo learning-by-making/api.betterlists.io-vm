@@ -1,0 +1,11 @@
+---
+- hosts: betterlists-vm
+  user: vagrant
+
+  tasks:
+  #
+  # docker-compose variable substitution can read only .env file from the folder where it runs
+  # (vagrant runs it from the home folder)
+  #
+  - name: do
+    shell: cat /vagrant/.env /vagrant/.env.local > ~/.env

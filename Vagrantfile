@@ -65,9 +65,13 @@ Vagrant.configure(2) do |config|
     s.args = ['/usr/bin/ansible-galaxy', "if sys.argv == ['/usr/bin/ansible-galaxy', '--help']: sys.argv.insert(1, 'info')"]
   end
 
-  # docker-compose variable substitution can read only .env file from the folder where it runs
-  # (vagrant launch it from the home folder)
-  config.vm.provision 'shell', inline: 'cat /vagrant/.env /vagrant/.env.local > ~/.env'
+  # Run Ansible from the Vagrant VM: docker compose environments variables
+  config.vm.provision 'ansible_local' do |ansible|
+    ansible.groups = {
+      'betterlists-vm' => ['default']
+    }
+    ansible.playbook = 'playbooks/docker_compose_env.yml'
+  end
 
   # Run containers
   config.vm.provision :docker
@@ -81,7 +85,7 @@ Vagrant.configure(2) do |config|
                         ENV['DOCKER_COMPOSE_REBUILD'].strip.downcase != 'false',
                       run: 'always'
 
-  # Run Ansible from the Vagrant VM
+  # Run Ansible from the Vagrant VM: provisioning the hanami app
   # patch: if 'install rvm' tasks and 'setup rvm' tasks run in the same playbook provisioning block
   #   'rvm not found' error is raised
   config.vm.provision 'ansible_local' do |ansible|
