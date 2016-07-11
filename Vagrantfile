@@ -65,6 +65,10 @@ Vagrant.configure(2) do |config|
     s.args = ['/usr/bin/ansible-galaxy', "if sys.argv == ['/usr/bin/ansible-galaxy', '--help']: sys.argv.insert(1, 'info')"]
   end
 
+  # docker-compose variable substitution can read only .env file from the folder where it runs
+  # (vagrant launch it from the home folder)
+  config.vm.provision 'shell', inline: 'cat /vagrant/.env /vagrant/.env.local > ~/.env'
+
   # Run containers
   config.vm.provision :docker
   # https://github.com/leighmcculloch/vagrant-docker-compose
