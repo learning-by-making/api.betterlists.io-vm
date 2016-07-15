@@ -33,6 +33,6 @@
     - include: install_packages.yml
     - include: rvm_setup.yml
     - include: ssh_keys.yml
-    - include: bash.yml
-    - include: clone_api_repo.yml
+    - include: bash_setup.yml
+    - include: repo_setup.yml
     - include: hanami_application_setup.yml

@@ -21,6 +21,9 @@
     - postgresql-client
     # required to manage source code
     - git
+    - git-flow
+    - git-core
+    - bash-completion
     # required by pip (see below)
     - python-pip
   become: yes
