@@ -78,3 +78,9 @@ $ docker run -it --rm --net containers_default --link containers_postgres_1:post
 ```bash
 $ hanami db console
 ```
+
+## stop development environment
+
+you can shutdown guest vm with ```$ vagrant halt``` and reprise developing with ```$ vagrant up```.
+db data persist on the guest vm as well as your repo changes that aren't pushed to remote.
+however if you run ```vagrant destroy``` you lose db data (but not your repo changes that aren't pushed to remote because it's synced with your local host).
