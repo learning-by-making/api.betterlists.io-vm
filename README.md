@@ -71,7 +71,7 @@ $ psql -U <POSTGRES_USER> -h 127.0.0.1
 
 #### from container
 ```bash
-$ docker run -it --rm --net containers_default --link containers_postgres_1:postgres postgres:9.5.3 psql -h postgres -U <POSTGRES_USER>
+$ docker run -it --rm --net containers_default --link containers_postgres_1:postgres postgres:<POSTGRES_VERSION> psql -h postgres -U <POSTGRES_USER>
 ```
 
 #### from hanami
