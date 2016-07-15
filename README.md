@@ -74,7 +74,7 @@ $ psql -U <POSTGRES_USER> -h 127.0.0.1
 $ docker run -it --rm --net containers_default --link containers_postgres_1:postgres postgres:<POSTGRES_VERSION> psql -h postgres -U <POSTGRES_USER>
 ```
 
-#### from hanami
+#### from [api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) projects
 ```bash
 $ hanami db console
 ```
