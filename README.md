@@ -20,7 +20,7 @@ $ vagrant up
 among other things on vagrant up provisioning:
 * fetch the repo 
 * install gems
-* configure the db connection in your local .env.development file 
+* configure the db connection in your local ```.env.development``` file 
 * run migrations
 
 you can SSH into the vm with ```$ vagrant ssh```
