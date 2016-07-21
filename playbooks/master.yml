@@ -31,4 +31,5 @@
     - include: ssh_keys.yml
     - include: bash_setup.yml
     - include: repo_setup.yml
+    - include: gemset_setup.yml
     - include: hanami_application_setup.yml
