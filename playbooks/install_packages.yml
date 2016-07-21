@@ -26,10 +26,12 @@
     - bash-completion
     # required by pip (see below)
     - python-pip
+    # required by 'db_setup' task
+    - python-psycopg2
   become: yes
   become_method: sudo
 
-# required by 'Fetch repo' task
+# required by 'repo_setup' task
 - pip: name=pexpect
   become: yes
   become_method: sudo

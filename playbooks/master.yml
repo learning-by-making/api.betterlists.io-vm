@@ -25,8 +25,17 @@
     postgres_password_local: "{{ lookup('ini', 'POSTGRES_PASSWORD type=properties file=../.env.local') }}"
     postgres_password: "{{ postgres_password_local | default(postgres_password_default, true) }}"
 
+    api_db_user_default: "{{ lookup('ini', 'API_DB_USER type=properties file=../.env') }}"
+    api_db_user_local: "{{ lookup('ini', 'API_DB_USER type=properties file=../.env.local') }}"
+    api_db_user: "{{ api_db_user_local | default(api_db_user_default, true) }}"
+
+    api_db_password_default: "{{ lookup('ini', 'API_DB_PASSWORD type=properties file=../.env') }}"
+    api_db_password_local: "{{ lookup('ini', 'API_DB_PASSWORD type=properties file=../.env.local') }}"
+    api_db_password: "{{ api_db_password_local | default(api_db_password_default, true) }}"
+
   tasks:
     - include: install_packages.yml
+    - include: db_setup.yml
     - include: rvm_setup.yml
     - include: ssh_keys.yml
     - include: bash_setup.yml
