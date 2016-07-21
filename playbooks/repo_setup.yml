@@ -7,7 +7,7 @@
 
 # I'm not able to use git module because I can't type the ssh passphrase
 #- name: Clone API repo
-#  git: repo=git@github.com:learning-by-making/api.betterlists.io.git dest=/home/{{ vm_username }}/{{ app_name }} key_file=/home/{{ vm_username }}/.ssh/id_rsa
+#  git: repo=git@github.com:learning-by-making/api.betterlists.io.git dest=~/{{ app_name }} key_file=~/.ssh/id_rsa
 
 - name: Clone API repo
   expect:
@@ -15,7 +15,7 @@
     responses:
       "Enter passphrase for key '/home/vagrant/.ssh/id_rsa': ": "{{ ssh_passphrase }}"
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}
     creates: .git/config
 
 - name: Init Git Flow
@@ -32,7 +32,7 @@
       'Version tag prefix\? \[\] $': ''
       'Hooks and filters directory\? \[.*\] $': ''
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}
 
 - name: Git Flow completion
   get_url: url=https://raw.githubusercontent.com/petervanderdoes/git-flow-completion/develop/git-flow-completion.bash dest=/etc/bash_completion.d

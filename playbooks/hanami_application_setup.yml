@@ -45,17 +45,17 @@
 - name: Application bootstrap
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami new . --application_name=api --db=postgresql --test=rspec
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}
     creates: Gemfile
 
 - name: Install gems
   shell: rvm {{ ruby_version }}@{{ app_name }} do bundle install
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}
 
 - name: Configure db connection
   lineinfile:
-    dest: /home/{{ vm_username }}/{{ app_name }}/.env.development
+    dest: ~/{{ app_name }}/.env.development
     regexp: '^(.*)_DATABASE_URL='
     line: '\1_DATABASE_URL="postgres://{{ postgres_user }}:{{ postgres_password }}@127.0.0.1/{{ app_name }}_development"'
     backrefs: yes
@@ -70,10 +70,10 @@
 - name: Create db
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db create
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}
   when: db_exists.rc
 
 - name: Run migrations
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db migrate
   args:
-    chdir: /home/{{ vm_username }}/{{ app_name }}
+    chdir: ~/{{ app_name }}

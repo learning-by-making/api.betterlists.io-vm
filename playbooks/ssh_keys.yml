@@ -5,11 +5,11 @@
 
 - name: ensure github.com is a known host
   lineinfile:
-    dest: /home/{{ vm_username }}/.ssh/known_hosts
+    dest: ~/.ssh/known_hosts
     create: yes
     state: present
     line: "{{ lookup('pipe', 'ssh-keyscan -t rsa github.com') }}"
     regexp: "^github\\.com"
 
 - name: copy host private key to guest VM
-  action: template src=templates/id_rsa dest=/home/{{ vm_username }}/.ssh/id_rsa mode=0600
+  action: template src=templates/id_rsa dest=~/.ssh/id_rsa mode=0600

@@ -4,9 +4,9 @@
 #
 
 - name: copy .gitconfig file to guest VM
-  action: template src=templates/.gitconfig dest=/home/{{ vm_username }}/.gitconfig
+  action: template src=templates/.gitconfig dest=~/.gitconfig
 
 - name: load .prompt file from .profile
   lineinfile:
-    dest: /home/{{ vm_username }}/.profile
+    dest: ~/.profile
     line: ". /vagrant/playbooks/templates/.prompt"
