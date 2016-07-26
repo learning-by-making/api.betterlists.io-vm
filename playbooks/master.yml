@@ -25,6 +25,10 @@
     postgres_password_local: "{{ lookup('ini', 'POSTGRES_PASSWORD type=properties file=../.env.local') }}"
     postgres_password: "{{ postgres_password_local | default(postgres_password_default, true) }}"
 
+    postgres_host_port_default: "{{ lookup('ini', 'POSTGRES_HOST_PORT type=properties file=../.env') }}"
+    postgres_host_port_local: "{{ lookup('ini', 'POSTGRES_HOST_PORT type=properties file=../.env.local') }}"
+    postgres_host_port: "{{ postgres_host_port_local | default(postgres_host_port_default, true) }}"
+
     api_db_user_default: "{{ lookup('ini', 'API_DB_USER type=properties file=../.env') }}"
     api_db_user_local: "{{ lookup('ini', 'API_DB_USER type=properties file=../.env.local') }}"
     api_db_user: "{{ api_db_user_local | default(api_db_user_default, true) }}"
