@@ -36,12 +36,12 @@
   lineinfile:
     dest: ~/{{ app_name }}/.env.development
     regexp: '^(.*)_DATABASE_URL='
-    line: '\1_DATABASE_URL="postgres://{{ api_db_user }}:{{ api_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_development"'
+    line: '\1_DATABASE_URL="postgres://{{ app_db_user }}:{{ app_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_development"'
     backrefs: yes
 
 # http://stackoverflow.com/a/16783253
 - name: check db exists
-  shell: export PGPASSWORD='{{ api_db_password }}'; psql -U {{ api_db_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_development
+  shell: export PGPASSWORD='{{ app_db_password }}'; psql -U {{ app_db_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_development
   ignore_errors: yes
   register: db_exists
 #- debug: msg={{ db_exists }}
@@ -52,7 +52,7 @@
     chdir: ~/{{ app_name }}
   when: db_exists.rc
 
-# if db already exists add privileges (needed if 'api_db_user' was changed in some environment variable's files after creating db)
+# if db already exists add privileges (needed if 'app_db_user' was changed in some environment variable's files after creating db)
 - postgresql_privs: >
     login={{ postgres_user }}
     password={{ postgres_password }}
@@ -61,7 +61,7 @@
     db={{ app_name }}_development
     privs=ALL
     type=database
-    role={{ api_db_user }}
+    role={{ app_db_user }}
   when: not (db_exists.rc)
 
 - name: Run migrations
