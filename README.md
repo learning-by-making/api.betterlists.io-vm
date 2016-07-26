@@ -83,6 +83,7 @@ $ hanami db console
 * APP_NAME: name of the application that we're developing. used as gemset name, folder name, ecc...
 * SOURCE_HOST_FOLDER: the path of the source of the application on your local host
 * RUBY_VERSION: ruby version, must use [.versions.conf](https://rvm.io/workflow/projects#project-file-versionsconf) syntax
+* HANAMI_VERSION: hanami version
 * SSH_PRIVATE_KEY_PATH: path of your private key
 * SSH_PASSPHRASE: passphrase of your private key
 * GITCONFIG_PATH: path of your ```.gitconfig``` file
@@ -106,7 +107,7 @@ otherwise just run ```vagrant provision```.
 overridding of POSTGRES_USER or POSTGRES_PASSWORD need to recreate the vm with ```vagrant destroy``` and ```vagrant up``` 
 or set them manually via psql on the guest vm. 
 
-### Syntax warning
+### warning on syntax
 
 inside .env* files docker doesn't like whitespaces around '='
 

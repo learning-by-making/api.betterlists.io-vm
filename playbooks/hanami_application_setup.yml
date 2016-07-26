@@ -19,7 +19,7 @@
 #- debug: var=test
 
 - name: Install Hanami
-  shell: rvm {{ ruby_version }}@{{ app_name }} do gem install hanami
+  shell: rvm {{ ruby_version }}@{{ app_name }} do gem install hanami -v {{ hanami_version }}
 
 - name: Application bootstrap
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami new . --application_name=api --db=postgresql --test=rspec

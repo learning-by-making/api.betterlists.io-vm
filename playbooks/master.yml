@@ -13,6 +13,10 @@
     app_name_local: "{{ lookup('ini', 'APP_NAME type=properties file=../.env.local') }}"
     app_name: "{{ app_name_local | default(app_name_default, true) }}"
 
+    hanami_version_default: "{{ lookup('ini', 'HANAMI_VERSION type=properties file=../.env') }}"
+    hanami_version_local: "{{ lookup('ini', 'HANAMI_VERSION type=properties file=../.env.local') }}"
+    hanami_version: "{{ hanami_version_local | default(hanami_version_default, true) }}"
+
     ssh_passphrase_default: "{{ lookup('ini', 'SSH_PASSPHRASE type=properties file=../.env') }}"
     ssh_passphrase_local: "{{ lookup('ini', 'SSH_PASSPHRASE type=properties file=../.env.local') }}"
     ssh_passphrase: "{{ ssh_passphrase_local | default(ssh_passphrase_default, true) }}"
