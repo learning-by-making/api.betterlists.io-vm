@@ -4,9 +4,7 @@
 # https://rvm.io/workflow/projects
 # NOTE: rvm isn't loaded as a function
 # https://rvm.io/workflow/scripting
-# http://docs.ansible.com/ansible/stat_module.html
-# http://docs.ansible.com/ansible/playbooks_filters.html
-# http://jinja.pocoo.org/docs/dev/templates
+# http://docs.ansible.com/ansible/lineinfile_module.html
 # http://docs.ansible.com/ansible/postgresql_privs_module.html
 #
 
@@ -32,11 +30,11 @@
   args:
     chdir: ~/{{ app_name }}
 
-- name: Configure db connection
+- name: Configure dev db connection
   lineinfile:
     dest: ~/{{ app_name }}/.env.development
-    regexp: '^(.*)_DATABASE_URL='
-    line: '\1_DATABASE_URL="postgres://{{ app_db_user }}:{{ app_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_development"'
+    regexp: '^(.*)DATABASE_URL='
+    line: '\1DATABASE_URL="postgres://{{ app_db_user }}:{{ app_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_development"'
     backrefs: yes
 
 # http://stackoverflow.com/a/16783253
