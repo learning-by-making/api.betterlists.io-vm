@@ -30,11 +30,20 @@
   args:
     chdir: ~/{{ app_name }}
 
+# hanami < 0.8.0 => database url string likes APP_NAME_DATABASE_URL=...
+# hanami = 0.8.0 => database url string likes DATABASE_URL=...
 - name: Configure dev db connection
   lineinfile:
     dest: ~/{{ app_name }}/.env.development
     regexp: '^(.*)DATABASE_URL='
     line: '\1DATABASE_URL="postgres://{{ app_db_user }}:{{ app_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_development"'
+    backrefs: yes
+
+- name: Configure test db connection
+  lineinfile:
+    dest: ~/{{ app_name }}/.env.test
+    regexp: '^(.*)DATABASE_URL='
+    line: '\1DATABASE_URL="postgres://{{ app_db_user }}:{{ app_db_password }}@127.0.0.1:{{ postgres_host_port }}/{{ app_name }}_test"'
     backrefs: yes
 
 # http://stackoverflow.com/a/16783253
@@ -44,7 +53,7 @@
   register: db_exists
 #- debug: msg={{ db_exists }}
 
-- name: Create db
+- name: Create dev db
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db create
   args:
     chdir: ~/{{ app_name }}
@@ -64,5 +73,10 @@
 
 - name: Run migrations
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db migrate
+  args:
+    chdir: ~/{{ app_name }}
+
+- name: Prepare test db
+  shell: rvm {{ ruby_version }}@{{ app_name }} do bash -c 'HANAMI_ENV=test hanami db prepare'
   args:
     chdir: ~/{{ app_name }}
