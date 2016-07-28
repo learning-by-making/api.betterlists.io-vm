@@ -76,6 +76,24 @@
   args:
     chdir: ~/{{ app_name }}
 
+- name: check test db exists
+  shell: export PGPASSWORD='{{ app_db_password }}'; psql -U {{ app_db_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_test
+  ignore_errors: yes
+  register: test_db_exists
+#- debug: msg={{ test_db_exists }}
+
+- name: check test db owner
+  shell: export PGPASSWORD='{{ app_db_password }}'; psql -U {{ app_db_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1,2 | grep -w {{ app_name }}_test | cut -d \| -f 2 | grep -qw {{ app_db_user }}
+  ignore_errors: yes
+  register: test_db_owner
+#- debug: msg={{ test_db_owner }}
+
+- name: Set test db owner
+  shell: export PGPASSWORD='{{ postgres_password }}'; psql -U {{ postgres_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -c 'ALTER DATABASE "{{ app_name }}_test" OWNER TO {{ app_db_user }};'
+  args:
+    chdir: ~/{{ app_name }}
+  when: not (test_db_exists.rc) and test_db_owner.rc
+
 - name: Prepare test db
   shell: rvm {{ ruby_version }}@{{ app_name }} do bash -c 'HANAMI_ENV=test hanami db prepare'
   args:
