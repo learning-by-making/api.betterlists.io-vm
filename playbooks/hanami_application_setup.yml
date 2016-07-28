@@ -47,29 +47,29 @@
     backrefs: yes
 
 # http://stackoverflow.com/a/16783253
-- name: check db exists
-  shell: export PGPASSWORD='{{ app_db_password }}'; psql -U {{ app_db_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_development
+- name: check dev db exists
+  shell: export PGPASSWORD='{{ postgres_password }}'; psql -U {{ postgres_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1 | grep -qw {{ app_name }}_development
   ignore_errors: yes
-  register: db_exists
-#- debug: msg={{ db_exists }}
+  register: dev_db_exists
+#- debug: msg={{ dev_db_exists }}
+
+- name: check dev db owner
+  shell: export PGPASSWORD='{{ postgres_password }}'; psql -U {{ postgres_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -lqt | cut -d \| -f 1,2 | grep -w {{ app_name }}_development | cut -d \| -f 2 | grep -qw {{ app_db_user }}
+  ignore_errors: yes
+  register: dev_db_owner
+#- debug: msg={{ dev_db_owner }}
 
 - name: Create dev db
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db create
   args:
     chdir: ~/{{ app_name }}
-  when: db_exists.rc
+  when: dev_db_exists.rc
 
-# if db already exists add privileges (needed if 'app_db_user' was changed in some environment variable's files after creating db)
-- postgresql_privs: >
-    login={{ postgres_user }}
-    password={{ postgres_password }}
-    host=127.0.0.1
-    port={{ postgres_host_port }}
-    db={{ app_name }}_development
-    privs=ALL
-    type=database
-    role={{ app_db_user }}
-  when: not (db_exists.rc)
+- name: Set dev db owner
+  shell: export PGPASSWORD='{{ postgres_password }}'; psql -U {{ postgres_user }} -h 127.0.0.1 -p {{ postgres_host_port }} -c 'ALTER DATABASE "{{ app_name }}_development" OWNER TO {{ app_db_user }};'
+  args:
+    chdir: ~/{{ app_name }}
+  when: not (dev_db_exists.rc) and dev_db_owner.rc
 
 - name: Run migrations
   shell: rvm {{ ruby_version }}@{{ app_name }} do hanami db migrate
