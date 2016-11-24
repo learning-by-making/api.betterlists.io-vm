@@ -1,119 +1,87 @@
-# betterlists.io-vm
+# betterlists.box
 
-provision a development environment to [api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) projects through tools like docker, ansible and vagrant (with some vagrant plugins)
+Local development environment to the 
+[api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) project
 
-Requirements:
+## Requirements
+
 * Git
-* Virtualbox
-* Vagrant
+* Docker
+* Docker Compose
 
-## start development environment
+## Setup
 
-on local host
-
+Clone `betterlists.box` repo and enter in its folder   
 ```bash
-$ mkdir betterlists.io
-$ cd betterlists.io
-$ git clone git@github.com:learning-by-making/betterlists.io-vm.git vm
-$ cd vm
-$ vagrant up
+git clone git@github.com:learning-by-making/betterlists.box.git betterlists
+cd betterlists
 ```
 
-on vagrant up, among other things, the provisioning script:
-* clone the [api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) repo (if not already present)
-* install gems (on a rvm gemset)
-* configure the db connection in your local ```.env.development``` file 
-* create db (if not present)
-* run migrations
-
-### guest vm equipment
-
-* git
-* git-flow
-* rvm
-* postgresql
-
-## development workflow
-
-ssh into the vm with 
+Clone `api.betterlists.io` repo
 ```bash
-$ vagrant ssh
-```
-the roots folder of [api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) projects is ```~/api.betterlists.io```.
-from this folder run commands like
-
-```bash
-$ hanami db migrate
-$ rspec
-$ passenger start
-$ git st
-$ git flow feature start new_feature
+git clone git@github.com:learning-by-making/betterlists.io.git <api_local_source_path>
 ```
 
-on host machine inside the ```betterlists.io``` folder now there is ```api``` folder that is synchronized with the folder ```~/api.betterlists.io``` of the guest vm.
-
-edit source code with your favorite editor from local host (or from the guest vm if you prefer).
-
-manage repository from the guest vm (your ssh private key has been copied into it) or from local host
-(remember to add your public key to your GitHub account).
-
-### run psql
-
-#### from guest vm bash
+Set api service's `.env.development` and `.env.test` files with environment variables
 ```bash
-$ psql -U <POSTGRES_USER/APP_DB_USER> -h 127.0.0.1 -p <POSTGRES_HOST_PORT>
+./set_api_env.sh
 ```
 
-#### from guest vm container
+Start api service
 ```bash
-$ docker run -it --rm --net containers_default --link containers_postgres_1:postgres postgres:<POSTGRES_VERSION> psql -h postgres -p <POSTGRES_HOST_PORT> -U <POSTGRES_USER/APP_DB_USER>
+docker compose up -d api
 ```
 
-#### from [api.betterlists.io](https://github.com/learning-by-making/api.betterlists.io) roots folder
-```bash
-$ hanami db console
-```
+On your local host you can:
+* point your browser at `localhost:<web_host_port>`
+* edit api project's files in `<api_local_source_path>` folder and manage them with git
+* connect to postgres `docker-compose run --rm api_db psql -h <api_db_container_name> -U postgres_user or api_db_user>`
 
-## environment variables
+## Environment variables
 
-```.env``` file contains environment variables.
+### compose
+ 
+variable | default value | description
+---------|---------------|-------------
+API_CONTAINER_NAME | betterlists_api | `api` container name
+SOURCE_PATH | ./api | local folder containing the source api project, path is relative to docker-compose.yml
+API_PATH | /api | container folder where the `SOURCE_PATH` local folder is mounted to
+API_CONF_PATH | /api_conf | container folder where the local api configuration folder is mounted to 
+WEB_HOST_PORT | 3000 | local port where the `api` web server port is mapped to
+WEB_GUEST_PORT | 9292 | container port where the `api` web server is listening to
+BUNDLE_PATH | /bundle | container folder where gem files are stored, it is mounted to local folder to cache gems (http://bradgessler.com/articles/docker-bundler/)
+API_DB_CONTAINER_NAME | betterlists_api_db | `api_db` container name
+POSTGRES_VERSION | 9.6.1 | version of the postgres image used in the `api_db` container
+API_DB_HOST_PORT | 5432 | local port where the `api_db` database server port is mapped to
 
-* DOCKER_COMPOSE_REBUILD: when true rebuild docker-compose containers on vagrant up and on vagrant provision ([vagrant-docker-compose](https://github.com/leighmcculloch/vagrant-docker-compose))
-* VM_USERNAME: username of the vagrant box ([vagrant boxes](https://www.vagrantup.com/docs/boxes.html))
-* APP_NAME: name of the application that we're developing. used as gemset name, folder name, ecc...
-* SOURCE_HOST_FOLDER: the path of the source of the application on your local host
-* RUBY_VERSION: ruby version, must use [.versions.conf](https://rvm.io/workflow/projects#project-file-versionsconf) syntax
-* HANAMI_VERSION: hanami version
-* SSH_PRIVATE_KEY_PATH: path of your private key
-* SSH_PASSPHRASE: passphrase of your private key
-* GITCONFIG_PATH: path of your ```.gitconfig``` file
-* VM_MEMORY: amount of memory you want to give to the vm ([vagrant virtualbox configuration](https://www.vagrantup.com/docs/virtualbox/configuration.html))
-* WEB_HOST_PORT: port number of your local host where WEB_GUEST_PORT is forwarded
-* WEB_GUEST_PORT: port number of the guest vm that is forwarded to the WEB_HOST_PORT. this must be the port that web server you'll run listen no
-* POSTGRES_VERSION: postgresql container version ([docker postgres container](https://hub.docker.com/_/postgres/))
-* POSTGRES_USER: postgresql 'superuser' user ([docker postgres container](https://hub.docker.com/_/postgres/))
-* POSTGRES_PASSWORD: postgresql 'superuser' password ([docker postgres container](https://hub.docker.com/_/postgres/))
-* POSTGRES_HOST_PORT: port number of the guest vm where the postgresql container ports is exposed ([docker compose ports container](https://docs.docker.com/compose/compose-file/#/ports))
-* APP_DB_USER: postgres user for the application 
-* APP_DB_PASSWORD: postgres password for the application's user
+### api_db service
 
-### overriding
+variable | default value | description
+---------|---------------|-------------
+POSTGRES_USER | postgres | superuser for PostgreSQL
+POSTGRES_PASSWORD | secret | superuser password for PostgreSQL
+API_DB_USER | betterlists | database user for the `api` service, used in api_db_conf/init-user-db.sh
+API_DB_PWD | secret | `API_DB_USER` password, used in `api_db_conf/init-user-db.sh`
 
-override them creating and editing ```.env.local``` file.
-typically override is SSH_PRIVATE_KEY_PATH, SSH_PASSPHRASE, GITCONFIG_PATH, POSTGRES_PASSWORD and APP_DB_PASSWORD.
-if the vm has already been created overriding variables that involve vm configuration on ```Vagrantfile``` (i.e. config.vm.* except provision) 
-need to run ```vagrant reload --provision``` (or ```vagrant halt``` and ```vagrant up```). 
-otherwise just run ```vagrant provision```.
-overridding of POSTGRES_USER or POSTGRES_PASSWORD need to recreate the vm with ```vagrant destroy``` and ```vagrant up``` 
-or set them manually via psql on the guest vm. 
+More info: https://hub.docker.com/_/postgres/
 
-### warning on syntax
+### Override
 
-inside .env* files docker doesn't like whitespaces around '='
+Docker Compose can read 
+[environment variables only from a .env file](https://docs.docker.com/compose/environment-variables/#/the-env-file) 
+in its same folder.
+If you want to override Docker Compose environment variables set them on the current shell.
+(you can edit their values on a `.env.local` file and load it on the current shell with
+`source .env.local`)
 
-## stop development environment
+To override `api_db` service environment variables edit `api_db_conf/env.local` file 
+that is passed to the `api_db` container by `docker-compose.override.yml`.
 
-you can shutdown guest vm with ```$ vagrant halt``` and reprise developing with ```$ vagrant up```.
-db data persist on the guest vm as well as your repo changes that aren't pushed to remote.
-however if you run ```vagrant destroy``` you lose db data. 
-differently local repo changes are kept because it's synced with your local host.
+More info on extending/overriding docker-compose: https://docs.docker.com/compose/extends
+
+## Api start-up
+
+Some little tips to start-up the api project.
+* docker-compose run --rm -e HANAMI_VERSION=0.9.0 api bundle init --gemspec=../api_conf/.gemspec_template
+* docker-compose run --rm --user="$(id -u):$(id -g)" api bundle install
+* docker-compose run --rm --user="$(id -u):$(id -g)" api bundle exec hanami new . --application_name=api --db=postgresql --test=rspec

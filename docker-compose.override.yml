@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  api_db:
+    env_file:
+      - ./api_db_conf/.env.local

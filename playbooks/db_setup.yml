@@ -1,8 +1,0 @@
----
-#
-# http://docs.ansible.com/ansible/postgresql_user_module.html
-#
-
-# create user (and its db) for api application
-- postgresql_user: name={{ app_db_user }} password={{ app_db_password }} role_attr_flags=CREATEDB login_host=127.0.0.1 port={{ postgres_host_port }} login_user={{ postgres_user }} login_password={{ postgres_password }}
-- postgresql_db: name={{ app_db_user }} owner={{ app_db_user }} login_host=127.0.0.1 port={{ postgres_host_port }} login_user={{ postgres_user }} login_password={{ postgres_password }}

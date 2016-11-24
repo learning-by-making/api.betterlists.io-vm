@@ -1,17 +1,9 @@
-# images log files like ubuntu-xenial-16.04-cloudimg-console.log
-*.log
+# ENV variables overrides
+.env.local
+api_db_conf/.env.local
 
-# vm info
-.vagrant
+# ide files
+.idea
 
-# Vagrant ENV Plugin (dotenv)
-.env.*
-
-# ssh private key
-playbooks/templates/id_rsa
-
-# git config
-playbooks/templates/.gitconfig
-
-# ansible retry files
-playbooks/*.retry
+# api project source
+/api

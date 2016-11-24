@@ -1,0 +1,51 @@
+version: '2'
+
+services:
+  #
+  api:
+    container_name: $API_CONTAINER_NAME
+    build:
+      context: api_conf
+      args:
+        # container folder where is mounted the `SOURCE_PATH` local folder (see the volumes section inside this service)
+        API_PATH: $API_PATH
+        #
+        USER: $USER
+    environment:
+      # container folder where gem files are stored to cache gems (see the volumes section inside this service)
+      BUNDLE_PATH: $BUNDLE_PATH
+    #
+    user: $USER
+    volumes:
+      # mount a local folder containing the api project's source to a container folder
+      - "${SOURCE_PATH}:${API_PATH}"
+      # mount a local folder containing the service configuration files to a container folder
+      - "./api_conf:${API_CONF_PATH}"
+      #  mount a local folder to a container folder to cache gems (http://bradgessler.com/articles/docker-bundler/)
+      - "bundle_data:${BUNDLE_PATH}"
+    ports:
+      # map a local port to a container port, the latter must be the same used by api's web server
+      # (see the command directive inside this service)
+      - "${WEB_HOST_PORT}:${WEB_GUEST_PORT}"
+    depends_on:
+      - api_db
+    command: bundle exec puma -p $WEB_GUEST_PORT
+  # https://hub.docker.com/_/postgres/
+  api_db:
+    container_name: $API_DB_CONTAINER_NAME
+    # postgres image
+    image: "postgres:${POSTGRES_VERSION}"
+    env_file:
+      - ./api_db_conf/.env
+    volumes:
+      # mount a local folder to a container folder where api_db's database server stores data
+      - pgdata:/var/lib/postgresql/data
+      # mount a local folder containing the service configuration files to a container folder to extend image
+      - ./api_db_conf:/docker-entrypoint-initdb.d
+    ports:
+      # map a local port to a container port, the latter must be the same used by api_db's database server
+      - "${API_DB_HOST_PORT}:5432"
+
+volumes:
+  pgdata:
+  bundle_data:
